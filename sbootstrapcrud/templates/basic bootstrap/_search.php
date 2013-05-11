@@ -4,11 +4,9 @@
  * - $this: the BootCrudCode object
  */
 ?>
-<?php echo "<?php \$form=\$this->beginWidget('TbActiveForm',array(
+<?php echo "<?php \$form=\$this->beginWidget('bootstrap.widgets.TbActiveForm',array(
 	'action'=>Yii::app()->createUrl(\$this->route),
 	'method'=>'get',
-	'type'=>'inline',
-	'htmlOptions'=>array('data-target'=>'".$this->modelClass."-grid'),
 )); ?>\n"; ?>
 
 <?php foreach($this->tableSchema->columns as $column): ?>
@@ -21,7 +19,7 @@
 
 <?php endforeach; ?>
 	<div class="form-actions">
-		<?php echo "<?php \$this->widget('TbButton', array(
+		<?php echo "<?php \$this->widget('bootstrap.widgets.TbButton', array(
 			'buttonType' => 'submit',
 			'type'=>'primary',
 			'label'=>'Search',
