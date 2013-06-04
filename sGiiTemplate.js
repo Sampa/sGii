@@ -1,5 +1,17 @@
 
 /* CRUD template js */
+/*
+	This is triggered when the user tries to delete one or more records
+	if it returns true the deletion will continue,else it will be aborted
+*/
+function confirmDelete(){
+	var r=confirm("Are you sure?");
+	if (r==true){
+ 		return true;
+	}
+	return false;
+}
+
 $(".admin-form form").submit(function(event){
 	event.preventDefault();
 	 if (this.beenSubmitted){
@@ -61,26 +73,14 @@ url = typeof url=="undefined" ? "/"+modelClass+"/view" : url;
 function delete_record(id,modelClass,url)
 {
 	url = typeof url == 'undefined' ? "/"+modelClass+"/delete" : url;
-	confirm();
-	bootbox.dialog("Are you sure you want to delete?",
-	 [
-		{
-			"label" : "No",
-			"class" : "btn-danger",
-			"callback": function() {}
-		}, 
-		{
-			"label" : "Yes",
-			"class" : "btn-success",
-			"callback": function() {
-				  $.post(url,{id:id,modelClass:modelClass}, function(data, textStatus, xhr) {			    
-					var grid = data.modelClass.toLowerCase();
-		            $.fn.yiiGridView.update(grid+'-grid', { });	                                  
-				  },'json');
-			  }
-		},
-	 ]
-	);		
+	if(!confirmDelete()){
+		return;
+	}
+	
+ 	$.post(url,{id:id,modelClass:modelClass}, function(data, textStatus, xhr) {			    
+			var grid = data.modelClass.toLowerCase();
+		    $.fn.yiiGridView.update(grid+'-grid', { });	                                  
+	},'json');
 }
 // making a grid selectable so you can do multi delete
 function makeSelectable(id){
@@ -117,6 +117,9 @@ function makeSelectable(id){
 //delete the selected rows
 $("body").on('click',".deleteSelected",function(){
 	var grid = $(".grid-view").attr('id');
+	if(!confirmDelete()){
+		return;
+	}
 	jQuery.post('/post/deleteMany', {models: $(".select-result").html()}, function(data, textStatus, xhr) {
 		$.fn.yiiGridView.update(grid, {	});	
 	});
